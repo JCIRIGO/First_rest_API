@@ -7,7 +7,7 @@ from flask_jwt_extended import JWTManager
 #database
 from db import db
 from models import BlocklistModel
-from flask_migrate import Migrate
+from flask_migrate import Migrate, upgrade
 #importing our blueprints
 from resources.items import blp as ItemsBlueprint
 from resources.stores import blp as StoresBlueprint
@@ -101,7 +101,12 @@ def create_app(db_url=None):
     with app.app_context():
         db.create_all()
     """
-        
+    #This is an attempt to start the database 
+    @app.before_first_request
+    def create_tables():
+        with app.app_context():
+            upgrade()
+
     api.register_blueprint(ItemsBlueprint)
     api.register_blueprint(StoresBlueprint)
     api.register_blueprint(TagsBlueprint)
