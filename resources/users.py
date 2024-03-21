@@ -48,6 +48,7 @@ class User(MethodView):
     def get(self, user_id):
         user = UserModel.query.get_or_404(user_id)
         return user
+    @jwt_required(fresh=True)
     def delete(self, user_id):
         user = UserModel.query.get_or_404(user_id)
         db.session.delete(user)
