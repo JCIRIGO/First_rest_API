@@ -101,11 +101,6 @@ def create_app(db_url=None):
     with app.app_context():
         db.create_all()
     """
-    #This is an attempt to start the database 
-    @app.before_first_request
-    def create_tables():
-        with app.app_context():
-            upgrade()
 
     api.register_blueprint(ItemsBlueprint)
     api.register_blueprint(StoresBlueprint)
