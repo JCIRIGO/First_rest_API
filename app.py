@@ -31,6 +31,10 @@ def create_app(db_url=None):
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.init_app(app)
     migrate = Migrate(app, db)
+    def apply_migrations():
+        with app.app_context():
+            upgrade()
+    apply_migrations()
 
     api = Api(app)
 
@@ -101,7 +105,7 @@ def create_app(db_url=None):
     with app.app_context():
         db.create_all()
     """
-
+        
     api.register_blueprint(ItemsBlueprint)
     api.register_blueprint(StoresBlueprint)
     api.register_blueprint(TagsBlueprint)
