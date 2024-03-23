@@ -7,7 +7,8 @@ from flask_jwt_extended import JWTManager
 #database
 from db import db
 from models import BlocklistModel
-from flask_migrate import Migrate, upgrade
+from flask_migrate import Migrate 
+#from flask_migrate import upgrade #This is for applying migrations in a different aproach
 from dotenv import load_dotenv
 #importing our blueprints
 from resources.items import blp as ItemsBlueprint
@@ -32,10 +33,12 @@ def create_app(db_url=None):
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.init_app(app)
     migrate = Migrate(app, db)  # noqa: F841
+    """ This is a different aproach for applying migrations it is more recommended for development and testing but nor for production because it will run migrations everytime the app starts even when there are no changes 
     def apply_migrations():
         with app.app_context():
             upgrade()
     apply_migrations()
+    """
 
     api = Api(app)
 
