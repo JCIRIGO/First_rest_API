@@ -8,6 +8,7 @@ from flask_jwt_extended import JWTManager
 from db import db
 from models import BlocklistModel
 from flask_migrate import Migrate, upgrade
+from dotenv import load_dotenv
 #importing our blueprints
 from resources.items import blp as ItemsBlueprint
 from resources.stores import blp as StoresBlueprint
@@ -16,7 +17,7 @@ from resources.users import blp as UsersBlueprint
 
 def create_app(db_url=None):
     app = Flask(__name__)
-
+    load_dotenv()
     #app config
     app.config["PROPAGATE_EXCEPTIONS"] = True
     app.config["API_TITLE"] = "Stores REST API"
@@ -30,7 +31,7 @@ def create_app(db_url=None):
     app.config["SQLALCHEMY_DATABASE_URI"] = db_url or os.getenv("DATABASE_URL", "sqlite:///data.db")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.init_app(app)
-    migrate = Migrate(app, db)
+    migrate = Migrate(app, db)  # noqa: F841
     def apply_migrations():
         with app.app_context():
             upgrade()
